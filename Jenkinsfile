@@ -6,35 +6,25 @@ pipeline {
             steps {
                 cleanWs()
             }
-        }
-        
-        stage('checkout') {
+        }        
+        stage('Clone Repository') {
             steps {
-                git credentialsId: 'first_pipeline', url: 'https://github.com/karthi210/car.git'
+                 git branch: 'master', credentialsId: 'docker-01', url: 'https://github.com/karthi210/car.git'
             }
         }
-        
-        stage('clean port') {
+
+        stage('Deploy to Nginx') {
             steps {
                 sh '''
-                docker ps -q --filter 'publish=8001' | xargs -r docker rm -f
+                sudo rm -rf /var/www/html/*
+                sudo cp -r * /var/www/html/
                 '''
             }
         }
-        
-        stage('build') {
+
+        stage('Verify') {
             steps {
-                sh '''
-                docker build -t carwebsite .
-                '''
-            }
-        }
-        
-        stage('run in port') {
-            steps {
-                sh '''
-                docker run -d -p 8001:80 carwebsite
-                '''
+                sh 'ls -la /var/www/html/'
             }
         }
     }
