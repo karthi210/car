@@ -10,13 +10,11 @@ pipeline {
 
         stage('Clone Repository') {
             steps {
-                git branch: 'main',
-                credentialsId: 'github-creds',
-                url: 'https://github.com/karthi210/car.git'
+                git branch: 'main', credentialsId: 'docker-01', url: 'https://github.com/karthi210/docker-jenkins.git'
             }
         }
 
-        stage('Deploy to Apache') {
+        stage('Deploy to Nginx') {
             steps {
                 sh '''
                 sudo rm -rf /var/www/html/*
